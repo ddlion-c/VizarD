@@ -19,6 +19,8 @@ import pandas as pd
 import sys
 import subprocess
 
+from ui.canvas import DataOverviewWidget
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -26,12 +28,16 @@ class MainWindow(QMainWindow):
 
         title = "VizarD"
 
+        # Line below fixed the issue of invisible menu bar running app in MacOS
+        self.menuBar().setNativeMenuBar(False)
+
         self.setWindowTitle(title)
         self.overview_widget = None
         self._init_ui()
 
     def _init_ui(self):
         self._init_menus()
+        self.init_plot()
 
     def _init_menus(self):
         self.save_prj_ui = SaveSessionUI()
@@ -39,6 +45,12 @@ class MainWindow(QMainWindow):
         self.open_file_ui = OpenFileUI()
         self.save_file_ui = SaveFileUI()
         self._init_file_menu()
+
+    def init_plot(self):
+        self.overview_widget = DataOverviewWidget(self)
+        self.setCentralWidget(self.overview_widget)
+        # # added navigation toolbar on figure canvas
+        self.navi_toolbar = NavigationToolbar(self.overview_widget, self.overview_widget)
 
     def _init_file_menu(self):
         self._menu_file = self.menuBar().addMenu("&File")
