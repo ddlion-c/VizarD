@@ -20,6 +20,7 @@ import sys
 import subprocess
 
 from ui.canvas import DataOverviewWidget
+from ui.data_table import FlowTable
 
 
 class MainWindow(QMainWindow):
@@ -38,6 +39,7 @@ class MainWindow(QMainWindow):
     def _init_ui(self):
         self._init_menus()
         self.init_plot()
+        self._init_dockable()
 
     def _init_menus(self):
         self.save_prj_ui = SaveSessionUI()
@@ -51,6 +53,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.overview_widget)
         # # added navigation toolbar on figure canvas
         self.navi_toolbar = NavigationToolbar(self.overview_widget, self.overview_widget)
+
+    def _init_dockable(self):
+        # Flow table widget
+        self.t1 = QTableView()
+        dock_bottom = QDockWidget('Imported data', self)
+        dock_bottom.setAllowedAreas(Qt.AllDockWidgetAreas)
+        # self.t1.setSelectionBehavior(QAbstractItemView.SelectRows)  # data table only allow row-selection
+        self.t1.setSelectionMode(QAbstractItemView.NoSelection)  # Disable selection for data table
+        dock_bottom.setWidget(self.t1)
+        self.addDockWidget(Qt.BottomDockWidgetArea, dock_bottom)
 
     def _init_file_menu(self):
         self._menu_file = self.menuBar().addMenu("&File")
@@ -75,6 +87,9 @@ class MainWindow(QMainWindow):
 
         self._menu_file.addSeparator()
 
+    def data_tb_upd(self):
+        self.data_tb = FlowTable(self.t1)
+
 
 class FileMenuUI(ABC):
     def init_dialog(self):
@@ -83,7 +98,12 @@ class FileMenuUI(ABC):
 
 class OpenFileUI(FileMenuUI):
     def init_dialog(self, main_window):
-        pass
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_names, _ = QFileDialog.getOpenFileNames(main_window, "QFileDialog.getOpenFileName()", "",
+                                                     "csv files (*.csv)", options=options)
+        if file_names:
+            QApplication.instance().datasetmng.sig_imp_from_file.emit(file_names)
 
 
 class SaveFileUI(FileMenuUI):

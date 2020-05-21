@@ -6,6 +6,7 @@ import logging.config
 from PyQt5.QtWidgets import QApplication, QDesktopWidget
 
 from ui.main import MainWindow
+from processing.datamng import DatasetManager
 
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ class VizarDApplication(QApplication):
         super().__init__(args)
 
         # Initialize instances
-
+        self.datasetmng = DatasetManager()
         self.mainWindow = MainWindow()
 
         self.mainWindow.resize(1024, 768)
