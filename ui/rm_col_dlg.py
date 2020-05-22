@@ -45,7 +45,7 @@ class RmColDialog():
         self.dialog.exec_()
 
     def _rm_col(self, col_name):
-        self.datasetmng.master_dataset = DataManipulate(self.datasetmng.master_dataset).rm_col(col_name)
+        DataManipulate(self.datasetmng.get_dataset()).rm_col(col_name)
 
         TableUpdateTrigger().data_changed_trigger()
 

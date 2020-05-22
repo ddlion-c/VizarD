@@ -57,13 +57,19 @@ class DatasetManager(QObject):
     def get_dataset(self):
         return self.master_dataset
 
+    # An API to update master dataset, can be expanded to update designated dataset
+    def update_dataset(self, data):
+        self.master_dataset = data
+
 
 class DataManipulate():
     def __init__(self, data):
+        self.datasetmng = QApplication.instance().datasetmng
         self.dataset = data
 
     def rm_col(self, col_name):
-        return self.dataset.drop(col_name, axis=1)
+        self.datasetmng.update_dataset(self.dataset.drop(col_name, axis=1))
+        return "Dataset updated"
 
 
 class DatasetImporter(ABC):  # abstract class
