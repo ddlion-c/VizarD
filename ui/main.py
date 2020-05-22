@@ -21,6 +21,7 @@ import subprocess
 
 from ui.canvas import DataOverviewWidget
 from ui.data_table import FlowTable
+from ui.rm_col_dlg import RmColDialog
 
 
 class MainWindow(QMainWindow):
@@ -55,14 +56,31 @@ class MainWindow(QMainWindow):
         self.navi_toolbar = NavigationToolbar(self.overview_widget, self.overview_widget)
 
     def _init_dockable(self):
+        # Remove column button
+        bt_rm = QPushButton('Remove Column')
+        bt_rm.setMaximumWidth(200)
+        bt_rm.clicked.connect(self._call_rm_col)
+        bt_rm.show()
+
         # Flow table widget
         self.t1 = QTableView()
         dock_bottom = QDockWidget('Imported data', self)
         dock_bottom.setAllowedAreas(Qt.AllDockWidgetAreas)
         # self.t1.setSelectionBehavior(QAbstractItemView.SelectRows)  # data table only allow row-selection
         self.t1.setSelectionMode(QAbstractItemView.NoSelection)  # Disable selection for data table
-        dock_bottom.setWidget(self.t1)
+
+        # Layout of the dockable widget
+        self.data_tab_frame = QFrame()
+        vbox = QVBoxLayout()
+        vbox.addWidget(bt_rm)
+        vbox.addWidget(self.t1)
+        self.data_tab_frame.setLayout(vbox)
+
+        dock_bottom.setWidget(self.data_tab_frame)
         self.addDockWidget(Qt.BottomDockWidgetArea, dock_bottom)
+
+    def _call_rm_col(self):
+        RmColDialog()
 
     def _init_file_menu(self):
         self._menu_file = self.menuBar().addMenu("&File")

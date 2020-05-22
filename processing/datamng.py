@@ -58,6 +58,14 @@ class DatasetManager(QObject):
         return self.master_dataset
 
 
+class DataManipulate():
+    def __init__(self, data):
+        self.dataset = data
+
+    def rm_col(self, col_name):
+        return self.dataset.drop(col_name, axis=1)
+
+
 class DatasetImporter(ABC):  # abstract class
     def import_data(self):
         pass

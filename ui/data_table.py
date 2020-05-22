@@ -11,8 +11,7 @@ import time
 from abc import ABC
 
 
-
-
+# Todo: The data type of data table is not correct, need to fix it
 class DataFrameModel(QAbstractTableModel):
     def __init__(self, data, parent=None):
         QtCore.QAbstractTableModel.__init__(self, parent)
@@ -61,3 +60,29 @@ class FlowTable:
         self.widget.setModel(model)
 
         self.widget.resizeColumnsToContents()
+
+
+"""
+Trigger format: signal emit embedded in a trigger method
+One signal can connect to multiple event methods
+"""
+
+
+class TableUpdateTrigger(QObject):
+    selection_changed = pyqtSignal()
+    data_changed = pyqtSignal()
+
+    def __init__(self):
+        super().__init__()
+        self.get_ind = None
+        self.datasetmng = QApplication.instance().datasetmng
+        self.data_tb = QApplication.instance().mainWindow.data_tb
+        self.data_changed.connect(self.flow_tb_refresh)
+
+    def data_changed_trigger(self):
+        self.data_changed.emit()
+
+    def flow_tb_refresh(self):
+        self.data_tb.refresh_data()
+
+
