@@ -7,7 +7,7 @@ A desktop software for general data processing, visualization, marking and evalu
 3. You can apply the same operation (remove features or filter data) to the same format of data.
 
 ## Function - Data Visualization
-You can generate spark line or scatter plot to visualize data <br>
+You can generate spark line or scatter plot to visualize data, using PCA <br>
 
 ## Function - Mark Data
 You can mark data by adding new columns to dataset, and export labeled data anytime.<br>
